@@ -28,18 +28,21 @@ class DataTableController extends \lithium\action\Controller
         return compact( 'aaData', 'iTotalRecords', 'iTotalDisplayRecords', 'sEcho' );
     }
     
-    protected function _getDatagridQuery( $columns )
+    protected function _getDatagridQuery( )
     {
-        $options = array(
+        $findOptions = (array)json_decode( $this->request->query['findOptions'] );
+        
+        $options = $findOptions + array(
             'conditions' => array(),
         );
         
-        $model = $this->options['model'];
+        //deslugify the fully qualified model class
+        $model = str_replace( "-", "\\", $this->request->model );
         
         /*
          * Fields to select
          */
-        $options['fields'] = $columns;
+        $options['fields'] = array_keys( (array)json_decode( $this->request->query['columns'] ) );
         
         /*
          * Paging

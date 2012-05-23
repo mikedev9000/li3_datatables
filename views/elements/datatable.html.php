@@ -6,13 +6,19 @@
  * 		$columns = array(
  * 			name => (array)options [title]
  * 		)
- * 
+ * @property array $findOptions an array of options to be passed into find in teh controller
  */
 
 if( !isset( $id ) )
     $id = \lithium\util\String::random( 4 );
+    
+if( !isset( $findOptions ) )
+    $findOptions = array();
+    
+//slugify that class for injecting into the route
+$slugModel = str_replace( "\\", "-", $model );
 
-$source = "/data-table/.json?model={$model}&columns=" . json_encode( $columns ) . "&";
+$source = "/data-table/{$slugModel}/.json?&columns=" . json_encode( $columns ) . "&findOptions=" . json_encode($findOptions) . "&";
 
 ?>
 <table id="<?=$id;?>" class="datagrid">
